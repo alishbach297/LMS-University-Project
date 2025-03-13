@@ -5,8 +5,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const connectDB = require("./config/db");
-const authRoute = require("./routes/authRoute")
-// const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
@@ -26,10 +24,25 @@ app.use(
     })
 );
 app.use(morgan('dev'));
-
-// Connect to DB
 connectDB();
-app.use('/auth', authRoute)
+const authRoutes = require("./routes/authRoutes")
+const departmentRoutes = require("./routes/departmentRoutes")
+const programRoutes = require("./routes/programRoutes")
+const courseRoutes = require("./routes/courseRoutes")
+const academicSessionRoutes = require("./routes/academicSessionRoutes")
+const programSemesterRoutes = require("./routes/programSemesterRoutes")
+const studentRoutes = require("./routes/studentRoutes")
+const teacherRoutes = require("./routes/teacherRoutes")
+const directorRoutes = require("./routes/directorRoutes")
+app.use("/api/auth", authRoutes)
+app.use("/api/departments", departmentRoutes)
+app.use("/api/programs", programRoutes)
+app.use("/api/courses", courseRoutes)
+app.use("/api/program-semesters", programSemesterRoutes)
+app.use("/api/academic-sessions", academicSessionRoutes)
+app.use("/api/students", studentRoutes)
+app.use("/api/teachers", teacherRoutes)
+app.use("/api/directors", directorRoutes)
 
 
 

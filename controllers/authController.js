@@ -1,20 +1,15 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User.js');
 const jwt = require('jsonwebtoken');
+
 exports.register = async (req, res) => {
   const { name, email, password } = req.body;
-
   try {
-    // Check if Head already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
-
-    // Hash Password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create User
     const newUser = new User({
       name,
       email,
@@ -56,7 +51,7 @@ exports.login = async (req, res) => {
       });
   
     } catch (error) {
-      console.error(error); // Log the error for debugging
+      console.error(error);
       res.status(500).json({ message: "Server Error" });
     }
   };
@@ -65,8 +60,6 @@ exports.login = async (req, res) => {
   exports.resetPassword = async (req, res) => {
     try {
       const { email, newPassword } = req.body;
-  
-      // Check if user exists
       const user = await User.findOne({ email });
       if (!user) {
         return res.status(400).json({ message: "User not found" });
@@ -76,11 +69,7 @@ exports.login = async (req, res) => {
       if (user.role !== "Head") {
         return res.status(403).json({ message: "Unauthorized: Only Head can reset password" });
       }
-  
-      // Hash new password
       const hashedPassword = await bcrypt.hash(newPassword, 10);
-  
-      // Update password
       user.password = hashedPassword;
       await user.save();
   
